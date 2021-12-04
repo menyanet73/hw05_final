@@ -1,6 +1,5 @@
 import shutil
 import tempfile
-from typing import Text
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -168,8 +167,7 @@ class PostImageCreateTest(TestCase):
         cls.user = User.objects.create(username='TestImageUser')
         cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.user)
-        
-        
+
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()

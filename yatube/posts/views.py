@@ -49,12 +49,16 @@ def profile(request, username):
         user=request.user, author=user
     ):
         following = True
+    self_page = False
+    if username == request.user.username:
+        self_page = True
     context = {
         'title': f'Все посты пользователя {name}',
         'author': user,
         'post_count': post_count,
         'page_obj': page_obj,
         'following': following,
+        'self_page': self_page,
     }
     return render(request, 'posts/profile.html', context)
 

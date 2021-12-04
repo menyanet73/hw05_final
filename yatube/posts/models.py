@@ -99,6 +99,6 @@ class Follow(models.Model):
         related_name='following',
         verbose_name='автор'
     )
-    
+
     def __str__(self):
         return f'{self.author}, follower:{self.user}'

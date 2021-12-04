@@ -309,6 +309,7 @@ class CacheTest(TestCase):
         response = self.client.get(reverse('posts:index'))
         self.assertNotEqual(content, response.content)
 
+
 class FollowTest(TestCase):
 
     @classmethod
