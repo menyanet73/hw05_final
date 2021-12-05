@@ -329,15 +329,28 @@ class FollowTest(TestCase):
         self.not_follower_client = Client()
         self.not_follower_client.force_login(self.not_follower)
 
-    def test_create_and_delete_follow(self):
+    def test_create_follow(self):
         self.follower_client.get(
             reverse('posts:profile_follow', kwargs={'username': self.author})
         )
-        self.assertTrue(Follow.objects.filter(author=self.author))
+        self.assertTrue(
+            Follow.objects.filter(
+                user=self.follower,
+                author=self.author
+            ).exists()
+        )
+
+    def test_delete_follow(self):
+        Follow.objects.create(user=self.follower, author=self.author)
         self.follower_client.get(
             reverse('posts:profile_unfollow', kwargs={'username': self.author})
         )
-        self.assertFalse(Follow.objects.filter(author=self.author))
+        self.assertFalse(
+            Follow.objects.filter(
+                user=self.follower,
+                author=self.author
+            ).exists()
+        )
 
     def test_follow_page_context(self):
         Follow.objects.create(

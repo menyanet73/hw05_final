@@ -10,7 +10,7 @@ from .models import Follow, Group, Post, User
 
 @cache_page(20, key_prefix='index_page')
 def index(request):
-    post_list = Post.objects.all()
+    post_list = Post.objects.select_related('group').all()
     paginator = Paginator(post_list, settings.PAGE_COUNT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -18,6 +18,7 @@ def index(request):
     context = {
         'title': 'Последние обновления на сайте',
         'page_obj': page_obj,
+        'index': True,
     }
     return render(request, template, context)
 
@@ -47,10 +48,10 @@ def profile(request, username):
     following = False
     if request.user.is_authenticated and Follow.objects.filter(
         user=request.user, author=user
-    ):
+    ).exists():
         following = True
     self_page = False
-    if username == request.user.username:
+    if user == request.user:
         self_page = True
     context = {
         'title': f'Все посты пользователя {name}',
@@ -132,12 +133,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    follow_list = request.user.follower.all()
-    users_list = []
-    for follow in follow_list:
-        users_list.append(follow.author)
-    user_list = User.objects.filter(username__in=users_list)
-    post_list = Post.objects.filter(author__in=user_list)
+    post_list = Post.objects.filter(author__following__user=request.user)
     paginator = Paginator(post_list, settings.PAGE_COUNT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -151,12 +147,9 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    author = User.objects.get(username=username)
-    follow_exist = False
-    if Follow.objects.filter(user=request.user, author=author):
-        follow_exist = True
-    if request.user != author and follow_exist is False:
-        Follow.objects.create(
+    author = get_object_or_404(User, username=username)
+    if request.user != author:
+        Follow.objects.get_or_create(
             user=request.user,
             author=author
         )
@@ -165,7 +158,7 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     follow = Follow.objects.filter(
         user=request.user,
         author=author

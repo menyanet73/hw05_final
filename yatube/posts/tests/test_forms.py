@@ -198,4 +198,4 @@ class PostImageCreateTest(TestCase):
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertEqual(posts_by_id[0].text, text)
         self.assertEqual(posts_by_id[0].author, self.user)
-        self.assertEqual(posts_by_id[0].image, 'posts/small.gif')
+        self.assertEqual(posts_by_id[0].image, f'posts/{uploaded.name}')
