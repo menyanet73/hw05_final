@@ -1,7 +1,10 @@
 # hw05_final
 Сервис Yatube разработанный по архитектуре MVT. Реализованы функции регистрации, создания постов, ,добавления картинки в пост, комментариев.
 
-### How start project:
+#### Стек:
+Python 3, Django 2.2
+
+## How start project:
 
 Clone a repository and go to command line:
 
