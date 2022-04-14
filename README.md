@@ -9,7 +9,7 @@ Python 3, Django 2.2, pytest
 Clone a repository and go to command line:
 
 ```sh
-git clone git@github.com:menyanet73/hw05_final.git
+git clone https://github.com/menyanet73/hw05_final.git
 ```
 
 ```sh
@@ -42,6 +42,9 @@ pip install -r requirements.txt
 
 Apply migrations:
 
+```sh
+cd yatube
+```
 ```sh
 python3 manage.py migrate
 ```
